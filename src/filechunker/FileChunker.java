@@ -10,7 +10,7 @@ public class FileChunker {
     // chunk size 100KB
     public static long chunkSize = 100000;
 
-    public static void split(String filename) throws IOException {
+    public static FileInfo split(String filename) throws IOException {
         // open file
         BufferedInputStream in = new BufferedInputStream(new FileInputStream(filename));
 
@@ -31,7 +31,7 @@ public class FileChunker {
             out.close();
         }
 
-        // last chunk might be smaller than chunk size
+        // last chunk probably smaller than chunk size
         if (fileSize != chunkSize * (chunkID - 1)) {
             // open output file
             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream("./server_data/" + filename + "." + chunkID));
@@ -43,15 +43,23 @@ public class FileChunker {
 
             // close output file
             out.close();
+
+            chunkID++;
         }
 
         // close input file
         in.close();
+
+        FileInfo fi = new FileInfo();
+        fi.filename = filename;
+        fi.fileSize = fileSize;
+        fi.numChunks = chunkID;
+
+        return fi;
     }
 
     public static void join(String baseFilename) throws IOException {
         int numParts = getNumParts(baseFilename);
-        System.out.println(numParts);
 
         // reassemble parts
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(baseFilename));
@@ -86,3 +94,4 @@ public class FileChunker {
     }
 
 }
+
