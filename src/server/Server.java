@@ -30,8 +30,7 @@ public class Server {
         }
 
         // first CLI argument is filename to split
-        FileChunker fc = new FileChunker();
-        FileInfo fi = fc.split(args[0]);
+        FileInfo fi = FileChunker.split(args[0]);
         System.out.println("server knows # of chunks: " + fi.numChunks);
         fi.numInitialChunks = (int) Math.ceil(fi.numChunks / 5.0);
         System.out.println("server num chunks to send: " + fi.numInitialChunks);
@@ -60,7 +59,7 @@ public class Server {
         private int numInitialChunks;
         private int numChunks;
 
-        public ServerHandler(Socket connection, int no, int numInitialChunks, int numChunks) {
+        ServerHandler(Socket connection, int no, int numInitialChunks, int numChunks) {
             this.connection = connection;
             this.no = no;
             this.numInitialChunks = numInitialChunks;
@@ -118,15 +117,14 @@ public class Server {
         }
     }
 
-    public static String[] readConfig() throws IOException {
+    private static String[] readConfig() throws IOException {
         // read in config
         BufferedReader br = new BufferedReader(new FileReader("config.txt"));
         String line = br.readLine(); // read first line
-        String[] contents = line.split(" "); // split on space
-        return contents;
+        return line.split(" ");
     }
 
-    public static void sendInitialChunks(Socket connection, int peerNum, int numInitialChunks) throws IOException {
+    private static void sendInitialChunks(Socket connection, int peerNum, int numInitialChunks) throws IOException {
         String directory = "./server_data";
 
         File[] files = new File(directory).listFiles();

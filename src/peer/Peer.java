@@ -1,6 +1,7 @@
 package peer;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -12,19 +13,20 @@ import java.util.Arrays;
  * Created by travis on 7/18/16.
  */
 public class Peer {
-    Socket requestSocket;
-    ObjectInputStream in;
-    int peerID;
-    int peerPort;
-    int peerDLID;
-    int peerULID;
-    int numInitialChunks;
-    int numChunks;
+    private Socket requestSocket;
+    private ServerSocket ss;
+    private ObjectInputStream in;
+    private int peerID;
+    private int peerPort;
+    private int peerDLID;
+    private int peerULID;
+    private int numInitialChunks;
+    private int numChunks;
 
-    void run() throws ClassNotFoundException, IOException {
+    private void run() throws ClassNotFoundException, IOException {
         try {
             // create a socket to server
-            Socket requestSocket = new Socket("localhost", 7000);
+            requestSocket = new Socket("localhost", 7000);
             System.out.println("Connected to localhost port 7000");
 
             //init inputStream
@@ -62,6 +64,19 @@ public class Peer {
 
             receiveInitialChunks(requestSocket, peerID);
 
+            summaryFile(peerID);
+
+            ServerSocket ss = new ServerSocket(peerPort);
+            System.out.println("Peer is listening on " + peerPort);
+            System.out.println("Waiting for peer " + (Integer.parseInt(config[2]) - 1) + " to connect...");
+            try {
+                while (true) {
+                    new PeerULHandler(ss.accept(), peerID, peerPort);
+                }
+            } finally {
+                ss.close();
+            }
+
 //            int bytesRead;
 //            int current = 0;
 //            FileOutputStream fos;
@@ -87,8 +102,7 @@ public class Peer {
 //            System.out.println("File " + "./peer" + peerID + "_data/norcia2015.pdf.0"
 //                    + " downloaded (" + current + " bytes read)");
 
-            while (true) {
-            }
+//            while (true) {}
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,18 +114,37 @@ public class Peer {
 
     }
 
-    public static String[] readConfig(int peerID) throws IOException {
+    private static class PeerULHandler extends Thread {
+        private Socket connection;
+        private ObjectInputStream in;
+        private ObjectOutputStream out;
+        private int peerID;
+        private int pPort;
+
+        PeerULHandler(Socket connection, int peerID, int pPort) {
+            this.connection = connection;
+            this.peerID = peerID;
+            this.pPort = pPort;
+        }
+
+        public void run() {
+            // write this
+        }
+    }
+
+    private static class PeerDLHandler extends Thread {}
+
+    private static String[] readConfig(int peerID) throws IOException {
         // read in config
         BufferedReader br = new BufferedReader(new FileReader("config.txt"));
         for (int i = 0; i < peerID; i++) {
             br.readLine();
         }
         String line = br.readLine();
-        String[] contents = line.split(" "); // split on space
-        return contents;
+        return line.split(" ");
     }
 
-    public static void receiveInitialChunks(Socket requestSocket, int peerID) throws IOException {
+    private static void receiveInitialChunks(Socket requestSocket, int peerID) throws IOException {
         String dirPath = "./peer" + peerID + "_data";
 
         BufferedInputStream bis = new BufferedInputStream(requestSocket.getInputStream());
@@ -136,6 +169,17 @@ public class Peer {
         }
 
         dis.close();
+    }
+
+    private static void summaryFile(int peerID) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter("peer" + peerID + "summary.txt");
+        File[] files = new File("./peer" + peerID + "_data").listFiles();
+        System.out.println(files.length);
+        for (File file : files) {
+            System.out.println(file.getName());
+            pw.println(file.getName());
+        }
+        pw.close();
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException {
