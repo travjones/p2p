@@ -72,7 +72,7 @@ public class Peer {
             new PeerDLHandler(requestSocket, peerDLport, peerID, numChunks).start();
             try {
                 while (true) {
-                    new PeerULHandler(ss.accept(), peerID, peerPort).start();
+                    new PeerULHandler(ss.accept(), peerID, peerPort, numChunks).start();
                 }
             } finally {
                 System.out.println("ss close");
@@ -95,29 +95,34 @@ public class Peer {
         private ObjectOutputStream out;
         private int peerID;
         private int pPort;
+        private int numChunks;
 
-        PeerULHandler(Socket connection, int peerID, int pPort) {
+        PeerULHandler(Socket connection, int peerID, int pPort, int numChunks) {
             this.connection = connection;
             this.peerID = peerID;
             this.pPort = pPort;
+            this.numChunks = numChunks;
         }
 
         public void run() {
             System.out.println("Peer connected on " + pPort + "...");
             try {
-                while (true) {
-                    ArrayList<String> chunksToSend;
+                ArrayList<String> chunksToSend;
+                ArrayList<String> chunks;
+
+                do {
                     chunksToSend = sendChunkList(connection, peerID);
                     sendChunks(chunksToSend, peerID, connection);
-                    System.out.println("send chunks 1");
 
-                    ArrayList<String> chunks;
                     chunks = (ArrayList<String>) receiveChunkList(connection, peerID);
                     receiveChunks(peerID, connection);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+
+                    int numChunksPeer = peerChunkCount(peerID);
+                    if (numChunksPeer == numChunks && chunksToSend.isEmpty() && chunks.isEmpty()) break;
+
+                } while (true);
+
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -149,18 +154,19 @@ public class Peer {
                         timer.cancel();
                         timer.purge();
 
-                        while (true) {
-                            ArrayList<String> chunks;
+                        ArrayList<String> chunks;
+                        ArrayList<String> chunksToSend;
+                        do {
                             chunks = (ArrayList<String>) receiveChunkList(requestSocket, peerID);
                             receiveChunks(peerID, requestSocket);
-                            System.out.println("rec chunks 1");
 
-                            ArrayList<String> chunksToSend;
                             chunksToSend = sendChunkList(requestSocket, peerID);
                             sendChunks(chunksToSend, peerID, requestSocket);
 
-                            System.out.println("yo");
-                        }
+                            int numChunksPeer = peerChunkCount(peerID);
+                            if (numChunksPeer == numChunks && chunks.isEmpty() && chunksToSend.isEmpty()) break;
+                        } while (true);
+
 
                     } catch (IOException e) {
                         System.out.println("Could not connect to UL peer...");
@@ -242,6 +248,7 @@ public class Peer {
         ObjectInputStream ois = new ObjectInputStream(bis);
         ArrayList<String> chunksToSend;
         chunksToSend = (ArrayList<String>) ois.readObject();
+        System.out.println("Chunks to send: " + Arrays.toString(chunksToSend.toArray()));
         return chunksToSend;
     }
 
@@ -250,7 +257,6 @@ public class Peer {
         BufferedInputStream bis = new BufferedInputStream(requestSocket.getInputStream());
         ObjectInputStream ois = new ObjectInputStream(bis);
         chunkList = (ArrayList<String>) ois.readObject();
-        System.out.println("Received chunk list: " + Arrays.toString(chunkList.toArray()));
 
         String filename = "./peer" + peerID + "summary.txt";
         BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -270,8 +276,6 @@ public class Peer {
                 chunksToGetList.add(el);
             }
         }
-        System.out.println("My chunk list: " + Arrays.toString(myChunkList.toArray()));
-        System.out.println("Chunks to request: " + Arrays.toString(chunksToGetList.toArray()));
 
         BufferedOutputStream bos = new BufferedOutputStream(requestSocket.getOutputStream());
         ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -279,10 +283,11 @@ public class Peer {
         oos.writeObject(chunksToGetList);
         oos.flush();
 
+        System.out.println("Chunks to request: " + Arrays.toString(chunksToGetList.toArray()));
         return chunksToGetList;
 
-//        chunksToGetList.addAll(chunkList.stream().filter(myChunkList::contains).collect(Collectors.toList()));
     }
+
 
     public static void sendChunks(ArrayList<String> reqChunks, int peerID, Socket connection) throws IOException {
         String dir = "./peer" + peerID + "_data";
@@ -338,6 +343,16 @@ public class Peer {
         // update summary file
         summaryFile(peerID);
 
+    }
+
+    public static int peerChunkCount(int peerID) {
+        String directory = "./peer" + peerID + "_data";
+
+        File[] files = new File(directory).listFiles();
+
+        int numChunksPeer = files.length;
+
+        return numChunksPeer;
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException {

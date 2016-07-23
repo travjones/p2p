@@ -86,21 +86,6 @@ public class Server {
 
                 sendInitialChunks(connection, no, numInitialChunks);
 
-//                FileInputStream fis;
-//                BufferedInputStream bis;
-//                OutputStream os;
-//
-//                File fileChunk = new File("./server_data/norcia2015.pdf.0");
-//                byte[] byteArray  = new byte [(int)fileChunk.length()];
-//                fis = new FileInputStream(fileChunk);
-//                bis = new BufferedInputStream(fis);
-//                bis.read(byteArray , 0, byteArray.length);
-//                os = connection.getOutputStream();
-//                System.out.println("Sending " + "./server_data/norcia2015.pdf.0" + "(" + byteArray.length + " bytes)");
-//                os.write(byteArray, 0, byteArray.length);
-//                os.flush();
-//                System.out.println("Done.");
-
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
