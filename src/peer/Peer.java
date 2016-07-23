@@ -48,6 +48,7 @@ public class Peer {
             peerPort = Integer.parseInt(config[1]);
             peerDLID = Integer.parseInt(config[2]);
             peerULID = Integer.parseInt(config[3]);
+            peerULport = Integer.parseInt(config[4]);
             peerDLport = Integer.parseInt(config[5]);
 
             // create folder to hold peer chunks
@@ -68,46 +69,21 @@ public class Peer {
             ServerSocket ss = new ServerSocket(peerPort);
             System.out.println("Peer is listening on " + peerPort);
             System.out.println("Waiting for peer " + (Integer.parseInt(config[2]) - 1) + " to connect...");
-            new PeerDLHandler(requestSocket, peerDLport, peerID).start();
+            new PeerDLHandler(requestSocket, peerDLport, peerID, numChunks).start();
             try {
                 while (true) {
                     new PeerULHandler(ss.accept(), peerID, peerPort).start();
                 }
             } finally {
+                System.out.println("ss close");
                 ss.close();
             }
-//            int bytesRead;
-//            int current = 0;
-//            FileOutputStream fos;
-//            BufferedOutputStream bos;
-//
-//            // receive file
-//            final int CHUNK_SIZE = 200000; // x2 just in case
-//            byte [] mybytearray  = new byte [CHUNK_SIZE];
-//            InputStream is = requestSocket.getInputStream();
-//            fos = new FileOutputStream("./peer" + peerID + "_data/norcia2015.pdf.0");
-//            bos = new BufferedOutputStream(fos);
-//            bytesRead = is.read(mybytearray,0,mybytearray.length);
-//            current = bytesRead;
-//
-//            do {
-//                bytesRead =
-//                        is.read(mybytearray, current, (mybytearray.length-current));
-//                if(bytesRead >= 0) current += bytesRead;
-//            } while(bytesRead > -1);
-//
-//            bos.write(mybytearray, 0 , current);
-//            bos.flush();
-//            System.out.println("File " + "./peer" + peerID + "_data/norcia2015.pdf.0"
-//                    + " downloaded (" + current + " bytes read)");
-
-//            while (true) {}
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             // Close connections
             in.close();
+            System.out.println("rs close");
             requestSocket.close();
         }
 
@@ -129,9 +105,16 @@ public class Peer {
         public void run() {
             System.out.println("Peer connected on " + pPort + "...");
             try {
-                ArrayList<String> chunksToSend;
-                chunksToSend = sendChunkList(connection, peerID);
-                sendChunks(chunksToSend, peerID, connection);
+                while (true) {
+                    ArrayList<String> chunksToSend;
+                    chunksToSend = sendChunkList(connection, peerID);
+                    sendChunks(chunksToSend, peerID, connection);
+                    System.out.println("send chunks 1");
+
+                    ArrayList<String> chunks;
+                    chunks = (ArrayList<String>) receiveChunkList(connection, peerID);
+                    receiveChunks(peerID, connection);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -146,11 +129,13 @@ public class Peer {
         private ObjectOutputStream out;
         private int pDLPort;
         private int peerID;
+        private int numChunks;
 
-        PeerDLHandler(Socket requestSocket, int pDLPort, int peerID) {
+        PeerDLHandler(Socket requestSocket, int pDLPort, int peerID, int numChunks) {
             this.requestSocket = requestSocket;
             this.pDLPort = pDLPort;
             this.peerID = peerID;
+            this.numChunks = numChunks;
         }
 
         public void run() {
@@ -164,9 +149,19 @@ public class Peer {
                         timer.cancel();
                         timer.purge();
 
-                        ArrayList<String> chunks;
-                        chunks = (ArrayList<String>) receiveChunkList(requestSocket, peerID);
-                        receiveChunks(peerID, requestSocket);
+                        while (true) {
+                            ArrayList<String> chunks;
+                            chunks = (ArrayList<String>) receiveChunkList(requestSocket, peerID);
+                            receiveChunks(peerID, requestSocket);
+                            System.out.println("rec chunks 1");
+
+                            ArrayList<String> chunksToSend;
+                            chunksToSend = sendChunkList(requestSocket, peerID);
+                            sendChunks(chunksToSend, peerID, requestSocket);
+
+                            System.out.println("yo");
+                        }
+
                     } catch (IOException e) {
                         System.out.println("Could not connect to UL peer...");
 //                        e.printStackTrace();
@@ -217,9 +212,7 @@ public class Peer {
     private static void summaryFile(int peerID) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter("peer" + peerID + "summary.txt");
         File[] files = new File("./peer" + peerID + "_data").listFiles();
-        System.out.println(files.length);
         for (File file : files) {
-            System.out.println(file.getName());
             pw.println(file.getName());
         }
         pw.close();
@@ -312,9 +305,10 @@ public class Peer {
             int b = 0;
             while ((b = bis.read()) != -1) bos.write(b);
 
-            bis.close();
+//            bis.close();
         }
-        dos.close();
+//        dos.close();
+        dos.flush();
     }
 
     public static void receiveChunks(int peerID, Socket connection) throws IOException {
@@ -336,10 +330,10 @@ public class Peer {
 
             for (int j = 0; j < fileLength; j++) bos.write(bis.read());
 
-            bos.close();
+//            bos.close();
+            fos.flush();
         }
-
-        dis.close();
+//        dis.close();
 
         // update summary file
         summaryFile(peerID);
