@@ -58,13 +58,13 @@ public class FileChunker {
         return fi;
     }
 
-    public static void join(String baseFilename) throws IOException {
-        int numParts = getNumParts(baseFilename);
+    public static void join(String baseFilename, String dlDir, String chunkDir) throws IOException {
+        int numParts = getNumParts(chunkDir + baseFilename);
 
         // reassemble parts
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(baseFilename));
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(dlDir + baseFilename));
         for (int part = 0; part < numParts; part++) {
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(baseFilename + "." + part));
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(chunkDir + baseFilename + "." + part));
 
             int b;
             while ((b = in.read()) != -1) {

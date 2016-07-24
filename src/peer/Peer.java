@@ -1,5 +1,8 @@
 package peer;
 
+import filechunker.FileChunker;
+import filechunker.FileChunker.*;
+
 import java.io.*;
 import java.lang.reflect.Array;
 import java.net.ServerSocket;
@@ -69,22 +72,58 @@ public class Peer {
             ServerSocket ss = new ServerSocket(peerPort);
             System.out.println("Peer is listening on " + peerPort);
             System.out.println("Waiting for peer " + (Integer.parseInt(config[2]) - 1) + " to connect...");
-            new PeerDLHandler(requestSocket, peerDLport, peerID, numChunks).start();
-            try {
-                while (true) {
-                    new PeerULHandler(ss.accept(), peerID, peerPort, numChunks).start();
-                }
-            } finally {
+            PeerDLHandler pdlh = new PeerDLHandler(requestSocket, peerDLport, peerID, numChunks);
+            pdlh.start();
+            pdlh.join();
+//            try {
+//                while (true) {
+                    PeerULHandler pulh = new PeerULHandler(ss.accept(), peerID, peerPort, numChunks);
+                    pulh.start();
+                    pulh.join();
+//            pdlh.join();
+//            pulh.join();
+//                }
+//            } finally {
                 System.out.println("ss close");
                 ss.close();
-            }
+//            }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             // Close connections
             in.close();
             System.out.println("rs close");
             requestSocket.close();
+
+            // rejoin chunks
+
+            // create dir for server chunks if it does not exist
+            Path path = Paths.get("./peer" + peerID + "_download");
+            if (!Files.exists(path)) {
+                try {
+                    Files.createDirectories(path);
+                } catch (IOException e) {
+                    // err creating dir
+                    e.printStackTrace();
+                }
+            }
+
+            String chunkDir = "./peer" + peerID + "_data/";
+
+            String dlDir = "./peer" + peerID + "_download/";
+
+            File[] files = new File(chunkDir).listFiles();
+
+            String[] shards = files[0].getName().split("\\.");
+
+            String filename = shards[0] + "." + shards[1];
+
+            FileChunker.join(filename, dlDir, chunkDir);
+
+            System.out.println("DONE!");
+
         }
 
     }
@@ -121,6 +160,8 @@ public class Peer {
                     if (numChunksPeer == numChunks && chunksToSend.isEmpty() && chunks.isEmpty()) break;
 
                 } while (true);
+                Thread.currentThread().interrupt();
+                return;
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -166,8 +207,8 @@ public class Peer {
                             int numChunksPeer = peerChunkCount(peerID);
                             if (numChunksPeer == numChunks && chunks.isEmpty() && chunksToSend.isEmpty()) break;
                         } while (true);
-
-
+                        Thread.currentThread().interrupt();
+                        return;
                     } catch (IOException e) {
                         System.out.println("Could not connect to UL peer...");
 //                        e.printStackTrace();
@@ -210,6 +251,7 @@ public class Peer {
             for (int j = 0; j < fileLength; j++) bos.write(bis.read());
 
             bos.close();
+            System.out.println("Received initial chunk from server " + fileName);
         }
 
         dis.close();
@@ -358,5 +400,6 @@ public class Peer {
     public static void main(String[] args) throws ClassNotFoundException, IOException {
         Peer peer = new Peer();
         peer.run();
+        System.out.println("Yooooo!");
     }
 }
