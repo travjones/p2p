@@ -31,9 +31,7 @@ public class Server {
 
         // first CLI argument is filename to split
         FileInfo fi = FileChunker.split(args[0]);
-        System.out.println("server knows # of chunks: " + fi.numChunks);
         fi.numInitialChunks = (int) Math.ceil(fi.numChunks / 5.0);
-        System.out.println("server num chunks to send: " + fi.numInitialChunks);
 
         String[] config = readConfig();
         final int sPort = Integer.parseInt(config[1]);
@@ -136,7 +134,9 @@ public class Server {
                 while ((b = bis.read()) != -1) bos.write(b);
 
                 bis.close();
+                System.out.println("SENDING INITIAL CHUNK: " + name);
             }
+
         } else if (peerNum == 5) {
             dos.writeInt(files.length - (numInitialChunks * 4));
             for (int i = (peerNum - 1) * numInitialChunks; i < (files.length); i++) {
@@ -153,6 +153,7 @@ public class Server {
                 while ((b = bis.read()) != -1) bos.write(b);
 
                 bis.close();
+                System.out.println("SENDING INITIAL CHUNK: " + name);
             }
         }
         dos.close();
