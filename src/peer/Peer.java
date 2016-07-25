@@ -230,6 +230,7 @@ public class Peer {
         pw.close();
     }
 
+    @SuppressWarnings("unchecked")
     private static ArrayList<String> sendChunkList(Socket connection, int peerID) throws IOException, ClassNotFoundException {
         String filename = "./peer" + peerID + "summary.txt";
         BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -258,6 +259,7 @@ public class Peer {
         return chunksToSend;
     }
 
+    @SuppressWarnings("unchecked")
     private static List<String> receiveChunkList(Socket requestSocket, int peerID) throws IOException, ClassNotFoundException {
         ArrayList<String> chunkList;
         BufferedInputStream bis = new BufferedInputStream(requestSocket.getInputStream());
@@ -375,6 +377,7 @@ public class Peer {
 
         File[] files = new File(chunkDir).listFiles();
 
+        assert files != null;
         String[] shards = files[0].getName().split("\\.");
 
         String filename = shards[0] + "." + shards[1];
@@ -389,9 +392,9 @@ public class Peer {
 
         File[] files = new File(directory).listFiles();
 
-        int numChunksPeer = files.length;
+        assert files != null;
 
-        return numChunksPeer;
+        return files.length;
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException {

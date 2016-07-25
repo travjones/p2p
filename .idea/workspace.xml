@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7100953-5fab-4778-8912-690f411a8143" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/p2p/peer/Peer$PeerDLHandler$1.class" afterPath="$PROJECT_DIR$/out/production/p2p/peer/Peer$PeerDLHandler$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/p2p/peer/Peer$PeerDLHandler.class" afterPath="$PROJECT_DIR$/out/production/p2p/peer/Peer$PeerDLHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/p2p/peer/Peer$PeerULHandler.class" afterPath="$PROJECT_DIR$/out/production/p2p/peer/Peer$PeerULHandler.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/p2p/peer/Peer.class" afterPath="$PROJECT_DIR$/out/production/p2p/peer/Peer.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/Peer.java" afterPath="$PROJECT_DIR$/src/peer/Peer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/server/Server.java" afterPath="$PROJECT_DIR$/src/server/Server.java" />
     </list>
     <ignored path="p2p.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,9 +28,11 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
-              <folding />
+            <state relative-caret-position="-1652">
+              <caret line="27" column="18" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="18" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -42,10 +40,12 @@
       <file leaf-file-name="Peer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1764">
-              <caret line="98" column="39" selection-start-line="98" selection-start-column="39" selection-end-line="98" selection-end-column="39" />
+            <state relative-caret-position="5436">
+              <caret line="302" column="0" selection-start-line="302" selection-start-column="0" selection-end-line="302" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#8050#8080#0" expanded="true" />
+                <element signature="e#9202#9232#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -54,7 +54,7 @@
       <file leaf-file-name="FileChunker.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filechunker/FileChunker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
+            <state relative-caret-position="274">
               <caret line="22" column="14" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
               <folding />
             </state>
@@ -148,6 +148,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="p2p" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="p2p" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="p2p" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -545,7 +559,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -555,6 +571,8 @@
           <caret line="92" column="37" selection-start-line="92" selection-start-column="37" selection-end-line="92" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -579,7 +597,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="882">
           <caret line="49" column="14" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="14" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -589,6 +609,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -613,7 +635,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="882">
           <caret line="49" column="14" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="14" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -623,6 +647,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -647,7 +673,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3042">
           <caret line="169" column="28" selection-start-line="169" selection-start-column="28" selection-end-line="169" selection-end-column="28" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -657,6 +685,8 @@
           <caret line="222" column="78" selection-start-line="222" selection-start-column="78" selection-end-line="222" selection-end-column="78" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -681,7 +711,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2898">
           <caret line="169" column="28" selection-start-line="169" selection-start-column="28" selection-end-line="169" selection-end-column="28" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -691,6 +723,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -715,7 +749,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -726,6 +762,8 @@
           <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -734,7 +772,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -761,6 +801,8 @@
           <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -782,7 +824,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filechunker/FileChunker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
+        <state relative-caret-position="274">
           <caret line="22" column="14" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
           <folding />
         </state>
@@ -790,18 +832,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="25" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
+        <state relative-caret-position="-1652">
+          <caret line="27" column="18" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1764">
-          <caret line="98" column="39" selection-start-line="98" selection-start-column="39" selection-end-line="98" selection-end-column="39" />
+        <state relative-caret-position="5436">
+          <caret line="302" column="0" selection-start-line="302" selection-start-column="0" selection-end-line="302" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#8050#8080#0" expanded="true" />
+            <element signature="e#9202#9232#0" expanded="true" />
           </folding>
         </state>
       </provider>
