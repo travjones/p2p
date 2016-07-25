@@ -1,10 +1,8 @@
 package peer;
 
 import filechunker.FileChunker;
-import filechunker.FileChunker.*;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
