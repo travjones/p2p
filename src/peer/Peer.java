@@ -93,7 +93,7 @@ public class Peer {
 
     }
 
-    private static class PeerULHandler extends Thread {
+    private class PeerULHandler extends Thread {
         private Socket connection;
         private ObjectInputStream in;
         private ObjectOutputStream out;
@@ -133,7 +133,7 @@ public class Peer {
         }
     }
 
-    private static class PeerDLHandler extends Thread {
+    private class PeerDLHandler extends Thread {
         private Socket requestSocket;
         private ObjectInputStream in;
         private ObjectOutputStream out;
@@ -184,7 +184,7 @@ public class Peer {
         }
     }
 
-    private static String[] readConfig(int peerID) throws IOException {
+    private String[] readConfig(int peerID) throws IOException {
         // read in config
         BufferedReader br = new BufferedReader(new FileReader("config.txt"));
         for (int i = 0; i < peerID; i++) {
@@ -194,7 +194,7 @@ public class Peer {
         return line.split(" ");
     }
 
-    private static void receiveInitialChunks(Socket requestSocket, int peerID) throws IOException {
+    private void receiveInitialChunks(Socket requestSocket, int peerID) throws IOException {
         String dirPath = "./peer" + peerID + "_data";
 
         BufferedInputStream bis = new BufferedInputStream(requestSocket.getInputStream());
@@ -221,7 +221,7 @@ public class Peer {
         dis.close();
     }
 
-    private static void summaryFile(int peerID) throws FileNotFoundException {
+    private void summaryFile(int peerID) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter("peer" + peerID + "summary.txt");
         File[] files = new File("./peer" + peerID + "_data").listFiles();
         for (File file : files) {
@@ -231,7 +231,7 @@ public class Peer {
     }
 
     @SuppressWarnings("unchecked")
-    private static ArrayList<String> sendChunkList(Socket connection, int peerID) throws IOException, ClassNotFoundException {
+    private ArrayList<String> sendChunkList(Socket connection, int peerID) throws IOException, ClassNotFoundException {
         String filename = "./peer" + peerID + "summary.txt";
         BufferedReader br = new BufferedReader(new FileReader(filename));
 
@@ -260,7 +260,7 @@ public class Peer {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<String> receiveChunkList(Socket requestSocket, int peerID) throws IOException, ClassNotFoundException {
+    private List<String> receiveChunkList(Socket requestSocket, int peerID) throws IOException, ClassNotFoundException {
         ArrayList<String> chunkList;
         BufferedInputStream bis = new BufferedInputStream(requestSocket.getInputStream());
         ObjectInputStream ois = new ObjectInputStream(bis);
@@ -298,7 +298,7 @@ public class Peer {
     }
 
 
-    private static void sendChunks(ArrayList<String> reqChunks, int peerID, Socket connection) throws IOException {
+    private void sendChunks(ArrayList<String> reqChunks, int peerID, Socket connection) throws IOException {
         String dir = "./peer" + peerID + "_data";
 
         BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
@@ -326,7 +326,7 @@ public class Peer {
         dos.flush();
     }
 
-    private static void receiveChunks(int peerID, Socket connection) throws IOException {
+    private void receiveChunks(int peerID, Socket connection) throws IOException {
         String dir = "./peer" + peerID + "_data";
         BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
         DataInputStream dis = new DataInputStream(bis);
@@ -357,7 +357,7 @@ public class Peer {
 
     }
 
-    private static synchronized void reassembleChunks(int peerID) throws IOException {
+    private synchronized void reassembleChunks(int peerID) throws IOException {
         // create dir for server chunks if it does not exist
         Path path = Paths.get("./peer" + peerID + "_download");
         if (!Files.exists(path)) {
@@ -387,7 +387,7 @@ public class Peer {
         System.out.println("FILE TRANSFERRED SUCCESSFULLY!");
     }
 
-    private static int peerChunkCount(int peerID) {
+    private int peerChunkCount(int peerID) {
         String directory = "./peer" + peerID + "_data";
 
         File[] files = new File(directory).listFiles();
