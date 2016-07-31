@@ -14,10 +14,8 @@ import java.nio.file.Paths;
  * Created by travis on 7/18/16.
  */
 public class Server {
-//    private static final int sPort = 7000;
 
-    public static void main(String args[]) throws IOException {
-
+    private void run(String filename) throws IOException {
         // create dir for server chunks if it does not exist
         Path path = Paths.get("server_data");
         if (!Files.exists(path)) {
@@ -30,7 +28,7 @@ public class Server {
         }
 
         // first CLI argument is filename to split
-        FileInfo fi = FileChunker.split(args[0]);
+        FileInfo fi = FileChunker.split(filename);
         fi.numInitialChunks = (int) Math.ceil(fi.numChunks / 5.0);
 
         String[] config = readConfig();
@@ -47,9 +45,17 @@ public class Server {
         } finally {
             ss.close();
         }
+
     }
 
-    private static class ServerHandler extends Thread {
+    public static void main(String args[]) throws IOException {
+        // get filename from CLI args
+        String filename = args[0];
+        Server server = new Server();
+        server.run(filename);
+    }
+
+    private class ServerHandler extends Thread {
         private Socket connection;
         private ObjectInputStream in;
         private ObjectOutputStream out;
@@ -100,14 +106,14 @@ public class Server {
         }
     }
 
-    private static String[] readConfig() throws IOException {
+    private String[] readConfig() throws IOException {
         // read in config
         BufferedReader br = new BufferedReader(new FileReader("config.txt"));
         String line = br.readLine(); // read first line
         return line.split(" ");
     }
 
-    private static void sendInitialChunks(Socket connection, int peerNum, int numInitialChunks) throws IOException {
+    private void sendInitialChunks(Socket connection, int peerNum, int numInitialChunks) throws IOException {
         String directory = "./server_data";
 
         File[] files = new File(directory).listFiles();
